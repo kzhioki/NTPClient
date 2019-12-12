@@ -201,4 +201,9 @@ void NTPClient::sendNTPPacket() {
   }
   this->_udp->write(this->_packetBuffer, NTP_PACKET_SIZE);
   this->_udp->endPacket();
+  if (this->_udp->endPacket() == 0) {
+    // recovery if UDP client encounters any errors
+    this->end();
+    this->begin(this->_port);
+  }
 }
